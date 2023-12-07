@@ -3,10 +3,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { BsFillBugFill } from "react-icons/bs";
+import classnames from "classnames";
 
 const NavBar = () => {
   const currentPath = usePathname();
-  console.log(currentPath);
+
   const links = [
     {
       label: "Dashboard",
@@ -26,8 +27,12 @@ const NavBar = () => {
         {links.map((link, linkIndex) => (
           <li key={linkIndex}>
             <Link
-              className={`${
-                link?.href === currentPath ? "text-zinc-900" : "text-zinc-300"} hover:opacity-90 hover:text-emerald-200 text-lg transition-colors`}
+              className={classnames({
+                "text-zinc-900": link?.href === currentPath,
+                "text-zinc-500": link?.href !== currentPath,
+                "hover:opacity-75": true,
+                "hover:text-yellow-400 transition-colors": true,
+              })}
               href={link?.href}
             >
               {link?.label}
