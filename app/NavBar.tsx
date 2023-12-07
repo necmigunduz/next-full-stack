@@ -31,7 +31,7 @@ const NavBar = () => {
                 "text-zinc-900": link?.href === currentPath,
                 "text-zinc-500": link?.href !== currentPath,
                 "hover:opacity-75": true,
-                "hover:text-yellow-400 transition-colors": true,
+                "hover:text-orange-400 transition-colors": true,
               })}
               href={link?.href}
             >
