@@ -6,9 +6,9 @@ import "./globals.css";
 import { Theme } from "@radix-ui/themes";
 import NavBar from "./NavBar";
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ["latin"],
-  variable: '--font-inter',
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -23,10 +23,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.variable}>
-        <Theme>
+      <body  className={inter.variable}>
+      <Theme appearance="light" accentColor="blue" grayColor="sand" panelBackground="solid" radius="full">
           <NavBar />
-          <main className="p-5">{children}</main>
+          <main className="p-5">{children}</main>,
         </Theme>
       </body>
     </html>
