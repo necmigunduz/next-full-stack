@@ -1,23 +1,30 @@
 "use client";
-import { Button, Callout, TextField } from "@radix-ui/themes";
+import { Button, Callout, Text, TextField } from "@radix-ui/themes";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import React, { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-
-interface IssueForm {
-  title: string;
-  description: string;
-}
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createIssueSchema } from "@/app/validationSchemas";
+import { z } from "zod";
+import { toLowercase } from "@/app/utils";
+type IssueForm = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
   const router = useRouter();
   const path = usePathname();
-  const { register, control, handleSubmit } = useForm<IssueForm>();
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IssueForm>({
+    resolver: zodResolver(createIssueSchema),
+  });
   const [error, setError] = useState("");
- 
+
   const submit = async (data: object) => {
     axios
       .post("/api/issues", data)
@@ -27,18 +34,26 @@ const NewIssuePage = () => {
           : (router.replace(path), Promise.reject("Something went wrong!"))
       )
       .catch((error) => {
-        error && setError("Please enter title (max 255 characters) and description (max 2500 characters).");
+        error &&
+          setError(
+            "Please enter title (max 255 characters) and description (max 2500 characters)."
+          );
       });
   };
+  function toLowerCase(message: string | undefined): React.ReactNode {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <div className="max-w-xl">
-      {error && (
+      {/* {error && (
         <Callout.Root className="mb-5">
           <Callout.Text color="red">
             <p>{error}</p>
           </Callout.Text>
         </Callout.Root>
-      )}
+      )} */}
+
       <form
         className="space-y-3"
         onSubmit={handleSubmit((data) => submit(data))}
@@ -51,6 +66,7 @@ const NewIssuePage = () => {
           />
           <br />
         </TextField.Root>
+        {errors?.title && <Text color="red" as="p" className="mt-2">{errors?.title?.message}</Text>}
         <Controller
           name="description"
           control={control}
@@ -61,7 +77,15 @@ const NewIssuePage = () => {
             />
           )}
         />
-
+        {errors?.description && (
+          <Text color="red" as="p">
+            {" "}
+            {errors?.description?.message === "Required"
+              ? `Description is ${toLowercase(errors?.description?.message)}`
+              : errors?.description?.message}
+            !
+          </Text>
+        )}
         <Button>Submit New Issue</Button>
       </form>
     </div>
