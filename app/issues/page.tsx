@@ -1,9 +1,18 @@
-import React from 'react'
+"use client";
+import axios from "axios";
+import React, { useEffect } from "react";
 
 const IssuePage = () => {
-  return (
-    <div>IssuePage</div>
-  )
-}
+  const getIssues = async () => {
+    const issues = await axios.get("/api/issues");
+    console.log(issues);
+  };
 
-export default IssuePage
+  useEffect(() => {
+    getIssues();
+  }, []);
+
+  return <div>IssuePage</div>;
+};
+
+export default IssuePage;
