@@ -11,6 +11,7 @@ import { createIssueSchema } from "@/app/validationSchemas";
 import { z } from "zod";
 import { toLowercase } from "@/app/utils";
 import ErrorMessage from "@/app/components/ErrorMessage";
+import Spinner from "@/app/components/Spinner";
 type IssueForm = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
@@ -25,16 +26,18 @@ const NewIssuePage = () => {
     resolver: zodResolver(createIssueSchema),
   });
   const [error, setError] = useState("");
-
+  const [submitting, setSubmitting] = useState(false);
   const submit = async (data: object) => {
     axios
       .post("/api/issues", data)
-      .then((res) =>
+      .then((res) => {
+        setSubmitting(true);
         res?.data?.id
           ? router.push(`/issues`)
-          : (router.replace(path), Promise.reject("Something went wrong!"))
-      )
+          : (router.replace(path), Promise.reject("Something went wrong!"));
+      })
       .catch((error) => {
+        setSubmitting(false);
         error &&
           setError(
             "Please enter title (max 255 characters) and description (max 2500 characters)."
@@ -83,7 +86,10 @@ const NewIssuePage = () => {
             ? `Description is ${toLowercase(errors?.description?.message)}`
             : errors?.description?.message}
         </ErrorMessage>
-        <Button>Submit New Issue</Button>
+        <Button disabled={submitting}>
+          Submit New Issue
+          {submitting && <Spinner />}
+        </Button>
       </form>
     </div>
   );
