@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/validationSchemas";
 import { z } from "zod";
 import { toLowercase } from "@/app/utils";
+import ErrorMessage from "@/app/components/ErrorMessage";
 type IssueForm = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
@@ -66,7 +67,7 @@ const NewIssuePage = () => {
           />
           <br />
         </TextField.Root>
-        {errors?.title && <Text color="red" as="p" className="mt-2">{errors?.title?.message}</Text>}
+        <ErrorMessage>{errors?.title?.message}</ErrorMessage>
         <Controller
           name="description"
           control={control}
@@ -77,15 +78,11 @@ const NewIssuePage = () => {
             />
           )}
         />
-        {errors?.description && (
-          <Text color="red" as="p">
-            {" "}
-            {errors?.description?.message === "Required"
-              ? `Description is ${toLowercase(errors?.description?.message)}`
-              : errors?.description?.message}
-            !
-          </Text>
-        )}
+        <ErrorMessage>
+          {errors?.description?.message === "Required"
+            ? `Description is ${toLowercase(errors?.description?.message)}`
+            : errors?.description?.message}
+        </ErrorMessage>
         <Button>Submit New Issue</Button>
       </form>
     </div>

@@ -1,6 +1,5 @@
 import { capitalizeFirstLetter, capitalizeWords } from "@/utilize";
 import { Text } from "@radix-ui/themes";
-import { Italiana } from "next/font/google";
 import Link from "next/link";
 import React from "react";
 
