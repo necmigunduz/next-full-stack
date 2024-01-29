@@ -16,6 +16,7 @@ const IssuePage = () => {
   const getIssues = async () => {
     try {
       const response = await axios.get("/api/issues");
+      console.log("RES", response.data);
       setIssues(response.data as IssueData[]);
     } catch (error) {
       console.error("Error fetching issues:", error);

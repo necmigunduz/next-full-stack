@@ -10,8 +10,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/validationSchemas";
 import { z } from "zod";
 import { toLowercase } from "@/app/utils";
-import ErrorMessage from "@/app/components/ErrorMessage";
-import Spinner from "@/app/components/Spinner";
+import ErrorMessage from "@/components/ErrorMessage";
+import Spinner from "@/components/Spinner";
 type IssueForm = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
