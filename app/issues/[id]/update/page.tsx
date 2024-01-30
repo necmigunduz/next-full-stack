@@ -70,9 +70,6 @@ const UpdateIssuePage = () => {
           );
       });
   };
-  function toLowerCase(message: string | undefined): React.ReactNode {
-    throw new Error("Function not implemented.");
-  }
 
   return (
     <div className="max-w-xl">
@@ -97,7 +94,9 @@ const UpdateIssuePage = () => {
           />
           <br />
         </TextField.Root>
-        <ErrorMessage>{errors?.title?.message}</ErrorMessage>
+        {issue?.title === "" && (
+          <ErrorMessage>{errors?.title?.message}</ErrorMessage>
+        )}
         <Controller
           name="description"
           control={control}
@@ -109,11 +108,13 @@ const UpdateIssuePage = () => {
             />
           )}
         />
-        <ErrorMessage>
-          {errors?.description?.message === "Required"
-            ? `Description is ${toLowercase(errors?.description?.message)}`
-            : errors?.description?.message}
-        </ErrorMessage>
+        {issue?.description === "" && (
+          <ErrorMessage>
+            {errors?.description?.message === "Required"
+              ? `Description is ${toLowercase(errors?.description?.message)}`
+              : errors?.description?.message}
+          </ErrorMessage>
+        )}
         <Button disabled={submitting}>
           Submit Edited Issue with no {id}
           {submitting && <Spinner />}
