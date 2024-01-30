@@ -4,7 +4,7 @@ import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useRouter, usePathname } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/validationSchemas";
@@ -19,8 +19,29 @@ const UpdateIssuePage = () => {
   const router = useRouter();
   const params = useParams();
   const path = usePathname();
+  const [issue, setIssue] = useState({
+    title: "",
+    description: "",
+    status: "",
+  });
+
   const { id } = params;
-  console.log(id)
+  const getIssue = async (id: string | string[]) => {
+    try {
+      const response = await axios.get(`/api/issues?id=${id}`);
+      const issue = response?.data.find(
+        (obj: { id: any }) => String(obj.id) === String(id)
+      );
+      setIssue(issue);
+    } catch (error) {
+      console.error("Error fetching issues:", error);
+    }
+  };
+
+  useEffect(() => {
+    getIssue(id);
+  }, [id]);
+
   const {
     register,
     control,
@@ -31,7 +52,7 @@ const UpdateIssuePage = () => {
   });
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  
+
   const submit = async (data: object) => {
     axios
       .put(`/api/issues/${id}`, data)
@@ -67,10 +88,11 @@ const UpdateIssuePage = () => {
         className="space-y-3"
         onSubmit={handleSubmit((data) => submit(data))}
       >
-        <h1 className="text-lg font-extrabold">Create a new issue</h1>
+        <h1 className="text-lg font-extrabold">Update issue with no of {id}</h1>
         <TextField.Root>
           <TextField.Input
             placeholder="Title -required and maximum 255 characters!"
+            value={issue?.title}
             {...register("title")}
           />
           <br />
@@ -83,6 +105,7 @@ const UpdateIssuePage = () => {
             <SimpleMDE
               placeholder="Enter your description of this issue -required and maximum 2500 characters!"
               {...field}
+              value={issue?.description}
             />
           )}
         />
@@ -92,7 +115,7 @@ const UpdateIssuePage = () => {
             : errors?.description?.message}
         </ErrorMessage>
         <Button disabled={submitting}>
-          Submit Edited Issue
+          Submit Edited Issue with no {id}
           {submitting && <Spinner />}
         </Button>
       </form>
