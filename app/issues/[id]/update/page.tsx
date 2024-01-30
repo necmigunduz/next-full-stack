@@ -92,7 +92,7 @@ const UpdateIssuePage = () => {
         <TextField.Root>
           <TextField.Input
             placeholder="Title -required and maximum 255 characters!"
-            value={issue?.title}
+            defaultValue={issue?.title}
             {...register("title")}
           />
           <br />
